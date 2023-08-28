@@ -31,7 +31,52 @@ class ListaEnlazada:
 
         return nodo_actual.valor
 
+    def generar_grafico(self):
+        # Crear el gráfico con Graphviz
+        grafo = Digraph('Colorealo', format='png', engine='dot')
 
+        # Agregar título
+        grafo.attr(label='Colorealo')
+
+        # Agregar nodos para cada número de columna (en la base del grafo)
+        for col in range(columnas):
+            grafo.node(f'col{col}', f'({col})')
+
+        # Agregar nodos para cada valor de celda y conectar con su columna correspondiente
+        actual_fila = self.cabeza
+        fila_numero = 0  # Comenzar en la base del grafo
+        while actual_fila is not None:
+            actual_celda = actual_fila.valor.cabeza
+            columna_numero = 0
+            while actual_celda is not None:
+                valor = actual_celda.valor
+                label = str(valor)
+                if valor == 1:
+                    label = "A"
+                elif valor == 2:
+                    label = "R"
+                elif valor == 3:
+                    label = "V"
+                elif valor == 4:
+                    label = "P"
+                elif valor == 5:
+                    label = "N"
+                elif valor == 6:
+                    label = " "
+                grafo.node(f'fila{fila_numero}col{columna_numero}', label=label)
+                grafo.edge(f'col{columna_numero}', f'fila{fila_numero}col{columna_numero}')
+                if actual_celda.siguiente is not None:
+                    grafo.edge(f'fila{fila_numero}col{columna_numero}', f'fila{fila_numero}col{columna_numero+1}')
+                actual_celda = actual_celda.siguiente
+                columna_numero += 1
+            if actual_fila.siguiente is not None:
+                grafo.edge(f'fila{fila_numero}', f'fila{fila_numero+1}', style='invis')  # Arista invisible para alinear
+            actual_fila = actual_fila.siguiente
+            fila_numero += 1
+
+        # Guardar y mostrar el gráfico
+        grafo.render('matriz_grafo', view=True)
+        
     def agregar(self, valor):
         nuevo_nodo = Nodo(valor)
         if self.cabeza is None:
@@ -45,24 +90,22 @@ class ListaEnlazada:
     def mostrar(self):
         actual = self.cabeza
         while actual is not None:
-            print(actual.valor, end="\t")
+            valor = actual.valor
+            if valor == 1:
+                print("A", end="\t")
+            elif valor == 2:
+                print("R", end="\t")
+            elif valor == 3:
+                print("V", end="\t")
+            elif valor == 4:
+                print("P", end="\t")
+            elif valor == 5:
+                print("N", end="\t")
+            elif valor == 6:
+                print(" ", end="\t")
+            else:
+                print(valor, end="\t")
             actual = actual.siguiente
-            #valor = actual.valor
-            #if valor == 1:
-            #    print("A", end="\t")
-            #elif valor == 2:
-            #    print("R", end="\t")
-            #elif valor == 3:
-            #    print("V", end="\t")
-            #elif valor == 4:
-            #    print("P", end="\t")
-            #elif valor == 5:
-            #    print("N", end="\t")
-            #elif valor == 6:
-            #    print(" ", end="\t")
-            #else:
-            #    print(valor, end="\t")
-            #actual = actual.siguiente
         print()
 
 #APP
@@ -111,26 +154,8 @@ while True:
             actual.valor.mostrar()
             actual = actual.siguiente
 
-        print("Creando Diagrama ...")
-        grafo = Digraph(format='png')  # Puedes cambiar 'png' por otros formatos como 'pdf', 'svg', etc.
-        # Agregar nodos al grafo
-        for i in range(filas):
-            for j in range(columnas):
-                valor = matriz.obtener_valor(i, j)  # Asumiendo que tienes un método obtener_valor en la clase ListaEnlazada
-                grafo.node(f'({i},{j})', label=str(valor))  # Agrega un nodo con las coordenadas y el valor
-
-        # Agregar arcos al grafo
-        for i in range(filas):
-            for j in range(columnas):
-                if i + 1 < filas:
-                    grafo.edge(f'({i},{j})', f'({i+1},{j})')  # Agrega un arco hacia abajo
-                if j + 1 < columnas:
-                    grafo.edge(f'({i},{j})', f'({i},{j+1})')  # Agrega un arco hacia la derecha
-
-        # Guardar el grafo en un archivo y generar la imagen
-        grafo.render('matriz_grafo', view=True)  # Esto generará 'matriz_grafo.png'
-
-
+        print("Generando gráfico...")
+        matriz.generar_grafico()
 
     elif opcion == 2:
         print("")
