@@ -23,6 +23,12 @@ def configuracion_tablero():
     fila=input("Ingrese la fila de la pieza: ")
     columna=input("Ingrese la columna de la pieza: ")
     color=input("Ingrese el color de la pieza: ")
+    if (color=="Red" or color=="Blue" or color=="Green" or color=="Orange" or color=="Purple"):
+      print("El color es correcto")
+      print("recuerde el color debe ser Rojo, Azul, Verde, Naranja o Morado")
+    else:
+      print("El color es incorrecto")
+      color=input("Ingrese el color de la pieza: ")
     mi_tablero.actualizar_pieza(int(fila),int(columna),color)
     print("")
     print("")
