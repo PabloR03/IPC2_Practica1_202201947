@@ -55,7 +55,8 @@ def mostrar_menu():
   print("")
   print("*******************-Menú-*******************")
   print("1. Configurar tablero")
-  print("2. Salir")
+  print("2. Datos del estudiante")
+  print("3. Salir")
   opcion =input("Ingrese una opción válida del menú: ")
   while True:
     if opcion=="1":
@@ -63,6 +64,13 @@ def mostrar_menu():
       configuracion_tablero()
       break
     elif opcion=="2":
+      print("Nombre: Pablo Andres Rodriguez Lima")
+      print("Carnet: 202201947")
+      print("Introduccion a la Programacion y Computacion 2 - Seccion D")
+      print("Ingenieria en Ciencias y Sistemas")
+      print("4to Semestre")
+      mostrar_menu()
+    elif opcion=="3":
       print("Gracias por jugar")
       break
     else:
